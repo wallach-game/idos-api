@@ -57,7 +57,7 @@ app = FastAPI(
         "Scrapes [idos.cz](https://idos.cz) and returns public transport connections.\n\n"
         "**Rate limiting:** 10 requests per 60 seconds per IP (via `CF-Connecting-IP`). "
         "Direct/local access has no limit.\n\n"
-        f"**Hard limit:** {GLOBAL_LIMIT} total requests per 24 hours across all users.\n\n"
+        f"**Hard limit:** {GLOBAL_LIMIT:,} total requests per 24 hours across all users.\n\n"
         f"**Concurrency:** max {CONCURRENCY} simultaneous requests, 1 per IP (round-robin)."
     ),
 )
