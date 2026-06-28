@@ -8,7 +8,7 @@ import os
 
 RATE_LIMIT   = 10    # per-IP requests per window
 RATE_WINDOW  = 60    # seconds
-GLOBAL_LIMIT = 500   # total requests per 24 hours
+GLOBAL_LIMIT = 5000  # total requests per 24 hours
 CONCURRENCY  = 3     # max simultaneous browser pages
 
 _hits: dict        = defaultdict(list)
