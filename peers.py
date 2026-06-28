@@ -27,7 +27,7 @@ import httpx
 from fastapi import APIRouter
 from pydantic import BaseModel
 
-SELF_URL: str = os.getenv("SELF_URL", "").rstrip("/")
+SELF_URL: str = (os.getenv("SELF_URL") or os.getenv("RENDER_EXTERNAL_URL") or "").rstrip("/")
 MAX_HOPS: int = int(os.getenv("MAX_HOPS", "1"))
 ENABLED: bool = os.getenv("PEER_ROUTING", "1") not in ("0", "false", "off")
 VERSION: str = os.getenv("PEER_VERSION", "1")

@@ -8,8 +8,6 @@ services:
     plan: free
     region: frankfurt
     envVars:
-      - key: SELF_URL
-        value: https://idos-api.onrender.com
       - key: BOOTSTRAP_PEERS
         value: ""
       - key: PEERS_CACHE
