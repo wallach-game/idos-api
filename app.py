@@ -74,9 +74,10 @@ app = FastAPI(
         f"**Concurrency:** max {CONCURRENCY} simultaneous requests, 1 per IP (round-robin)."
     ),
 )
+_cors_origins = [o.strip() for o in os.getenv("CORS_ORIGINS", "https://idos.numerlab.org").split(",") if o.strip()]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://idos.numerlab.org"],
+    allow_origins=_cors_origins,
     allow_methods=["GET"],
 )
 browser = None
@@ -106,6 +107,8 @@ async def startup_event():
         pass
     import peers
     import proxies
+    import sensors
     app.include_router(peers.router, prefix="/api")
     await peers.bootstrap()
     await proxies.start_background_refresh()
+    await sensors.start_mqtt_publisher()

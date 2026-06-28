@@ -11,7 +11,19 @@ services:
       - ./routes.py:/app/routes.py
       - ./peers.py:/app/peers.py
       - ./proxies.py:/app/proxies.py
+      - ./sensors.py:/app/sensors.py
       - playwright_data:/opt/ms-playwright
+      - /sys/class/hwmon:/sys/class/hwmon:ro
+    environment:
+      - CORS_ORIGINS=https://idos.numerlab.org,https://homeassistant.numerlab.org,http://10.0.0.29:8123
+      - PEER_ROUTING=0
+      - PROXY_ENABLED=0
+      - MQTT_HOST=
+      - MQTT_PORT=1883
+      - MQTT_USER=
+      - MQTT_PASS=
+      - MQTT_NODE_ID=idos-api
+      - MQTT_INTERVAL=60
     stdin_open: true
     tty: true
 

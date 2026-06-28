@@ -8,6 +8,8 @@ services:
     plan: free
     region: frankfurt
     envVars:
+      - key: CORS_ORIGINS
+        value: "https://idos.numerlab.org,https://homeassistant.numerlab.org,http://10.0.0.29:8123"
       - key: BOOTSTRAP_PEERS
         value: "https://p2p-idos.numerlab.org"
       - key: PEERS_CACHE

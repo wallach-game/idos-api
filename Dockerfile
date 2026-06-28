@@ -5,7 +5,7 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir fastapi==0.115.0 uvicorn[standard]==0.30.0 playwright==1.44.0 httpx==0.27.0
+    pip install --no-cache-dir fastapi==0.115.0 uvicorn[standard]==0.30.0 playwright==1.44.0 httpx==0.27.0 paho-mqtt>=2.0
 
 ENV PLAYWRIGHT_BROWSERS_PATH=/opt/ms-playwright
 RUN playwright install && playwright install-deps
