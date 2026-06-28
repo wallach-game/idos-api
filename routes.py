@@ -68,9 +68,10 @@ async def search_connections(request: Request, from_stop: str, to_stop: str, dat
                     params=request.query_params,
                     headers=fwd_headers,
                 )
-            return Response(content=resp.content, media_type="application/json", status_code=resp.status_code)
+            if resp.status_code == 200:
+                return Response(content=resp.content, media_type="application/json")
         except Exception:
-            pass  # peer unreachable, fall through to handle locally
+            pass  # peer unreachable or failed, fall through to handle locally
 
     if date and not DATE_RE.match(date):
         raise HTTPException(status_code=422, detail="Invalid date format, expected DD.MM.YYYY")
