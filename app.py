@@ -81,6 +81,16 @@ app.add_middleware(
 )
 browser = None
 
+@app.get("/status")
+async def status():
+    now = time.time()
+    return {
+        "active_requests": CONCURRENCY - _global_sem._value if _global_sem else 0,
+        "capacity": CONCURRENCY,
+        "daily_requests": len([t for t in _global_hits if now - t < 86400]),
+        "daily_limit": GLOBAL_LIMIT,
+    }
+
 @app.on_event("startup")
 async def startup_event():
     global browser, _global_sem, _ip_sems_lock
@@ -94,6 +104,8 @@ async def startup_event():
     except ImportError:
         pass
     import peers
+    import proxies
     app.include_router(peers.router)
     if seed := os.getenv("PEER_SEED_URL"):
         await peers.startup_connect(seed)
+    await proxies.start_background_refresh()

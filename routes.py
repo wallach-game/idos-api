@@ -58,11 +58,14 @@ async def collect_boxes(page):
 async def search_connections(request: Request, from_stop: str, to_stop: str, date: str = "", time: str = "", n: int = Query(default=3, ge=1, le=20)):
     hops = int(request.headers.get("x-hops", "0"))
     if peer := peers.next_peer(hops):
+        fwd_headers = {"x-hops": str(hops + 1)}
+        if cf := request.headers.get("CF-Connecting-IP"):
+            fwd_headers["CF-Connecting-IP"] = cf
         async with httpx.AsyncClient(timeout=65) as client:
             resp = await client.get(
                 f"{peer}/api/search",
                 params=request.query_params,
-                headers={"x-hops": str(hops + 1)},
+                headers=fwd_headers,
             )
         return Response(content=resp.content, media_type="application/json", status_code=resp.status_code)
 

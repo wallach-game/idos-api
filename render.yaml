@@ -5,7 +5,7 @@ services:
     dockerfilePath: ./Dockerfile
     dockerContext: .
     port: 8000
-    healthCheckPath: /
+    healthCheckPath: /status
     plan: free
     region: frankfurt
     envVars:
@@ -17,7 +17,13 @@ services:
         value: "1"
       - key: MAX_HOPS
         value: "1"
+      - key: PEER_VERSION
+        value: "1"
+      - key: PEER_COMPATIBLE_VERSIONS
+        value: "1"
       - key: PROXY_ENABLED
         value: "0"
       - key: PROXY_MAX_TRIES
         value: "3"
+      - key: PROXY_REFRESH
+        value: "3600"
