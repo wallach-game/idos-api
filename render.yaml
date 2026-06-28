@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: idos-api
+    env: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    port: 8000
+    healthCheckPath: /
+    plan: free
+    region: frankfurt
+    envVars:
+      - key: SELF_URL
+        value: https://idos-api.onrender.com
+      - key: PEER_SEED_URL
+        value: ""
+      - key: PEER_ROUTING
+        value: "1"
+      - key: MAX_HOPS
+        value: "1"
+      - key: PROXY_ENABLED
+        value: "0"
+      - key: PROXY_MAX_TRIES
+        value: "3"
