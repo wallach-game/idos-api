@@ -11,8 +11,12 @@ services:
     envVars:
       - key: SELF_URL
         value: https://idos-api.onrender.com
-      - key: PEER_SEED_URL
+      - key: BOOTSTRAP_PEERS
         value: ""
+      - key: PEERS_CACHE
+        value: /app/peers_cache.json
+      - key: PEER_REDISCOVER
+        value: "3600"
       - key: PEER_ROUTING
         value: "1"
       - key: MAX_HOPS

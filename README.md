@@ -93,25 +93,32 @@ API available at `http://localhost:8001`
 
 ## Clustering
 
-Multiple instances can form a peer-to-peer cluster. Each node round-robins incoming requests across all known peers, distributing load and browser sessions.
+Multiple instances can form a leaderless peer-to-peer cluster. Each node round-robins incoming requests across all known peers, distributing load and browser sessions across different IPs.
 
-**First instance** — set its own URL so peers can reach it back:
-```
-SELF_URL=https://idos-api-1.onrender.com
-```
+There is no central coordinator. Nodes discover each other through community-operated bootstrap peers — anyone can run a node and submit it to the list below.
 
-**Additional instances** — point at any existing node to bootstrap:
+**Setup:**
 ```
-SELF_URL=https://idos-api-2.onrender.com
-PEER_SEED_URL=https://idos-api-1.onrender.com
+SELF_URL=https://your-instance.onrender.com
+BOOTSTRAP_PEERS=https://node1.example.com,https://node2.example.com
 ```
 
-On startup the new node registers itself with the seed and collects the full peer list. All env vars:
+On startup the node contacts all bootstrap peers in parallel, registers itself, and collects their full peer lists. If no bootstrap peers respond it starts solo and waits for incoming registrations.
+
+**Community nodes** — add yours via PR:
+
+| URL | Region |
+|-----|--------|
+| _(none yet — be the first)_ | — |
+
+All env vars:
 
 | Variable | Default | Description |
 |----------|---------|-------------|
 | `SELF_URL` | — | This instance's public URL |
-| `PEER_SEED_URL` | — | Existing node to bootstrap from |
+| `BOOTSTRAP_PEERS` | — | Comma-separated peers to bootstrap from (grows automatically) |
+| `PEERS_CACHE` | `/app/peers_cache.json` | Path to persist discovered peers across restarts |
+| `PEER_REDISCOVER` | `3600` | Seconds between background rediscovery runs |
 | `PEER_ROUTING` | `1` | Set to `0` to disable request forwarding |
 | `MAX_HOPS` | `1` | Max times a request is forwarded between peers |
 | `PEER_VERSION` | `1` | Protocol version of this node |

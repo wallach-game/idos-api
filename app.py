@@ -106,6 +106,5 @@ async def startup_event():
     import peers
     import proxies
     app.include_router(peers.router)
-    if seed := os.getenv("PEER_SEED_URL"):
-        await peers.startup_connect(seed)
+    await peers.bootstrap()
     await proxies.start_background_refresh()
