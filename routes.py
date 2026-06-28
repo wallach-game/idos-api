@@ -51,6 +51,7 @@ async def search_connections(request: Request, from_stop: str, to_stop: str, dat
     cf_ip = request.headers.get("CF-Connecting-IP")
     if cf_ip:
         core.check_rate(cf_ip)
+    await core.acquire(cf_ip)
     page = await core.browser.new_page()
     try:
         await page.goto(IDOS_URL, timeout=60000, wait_until="domcontentloaded")
@@ -80,3 +81,4 @@ async def search_connections(request: Request, from_stop: str, to_stop: str, dat
         return {"from": from_stop, "to": to_stop, "connections": results[:n]}
     finally:
         await page.close()
+        core.release(cf_ip)
