@@ -54,7 +54,7 @@ Current load on this instance.
 { "active_requests": 1, "capacity": 3, "daily_requests": 42, "daily_limit": 5000 }
 ```
 
-### `GET /peers`
+### `GET /api/peers`
 
 List of known peer instances in the cluster.
 
@@ -62,12 +62,12 @@ List of known peer instances in the cluster.
 [{ "url": "https://idos-api-2.onrender.com", "version": "1" }]
 ```
 
-### `POST /peers/register`
+### `POST /api/peers/register`
 
 Register a peer manually.
 
 ```bash
-curl -X POST http://localhost:8001/peers/register \
+curl -X POST http://localhost:8001/api/peers/register \
   -H "Content-Type: application/json" \
   -d '{"url": "https://idos-api-2.onrender.com", "version": "1"}'
 ```

@@ -105,6 +105,6 @@ async def startup_event():
         pass
     import peers
     import proxies
-    app.include_router(peers.router)
+    app.include_router(peers.router, prefix="/api")
     await peers.bootstrap()
     await proxies.start_background_refresh()

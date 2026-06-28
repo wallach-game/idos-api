@@ -96,19 +96,19 @@ async def _connect_to(client: httpx.AsyncClient, seed_url: str) -> None:
     """Register with one peer and collect its peer list."""
     payload = {"url": SELF_URL, "version": VERSION}
     try:
-        await client.post(f"{seed_url}/peers/register", json=payload)
+        await client.post(f"{seed_url}/api/peers/register", json=payload)
     except Exception:
         return
     register(seed_url)
     try:
-        resp = await client.get(f"{seed_url}/peers")
+        resp = await client.get(f"{seed_url}/api/peers")
         for peer in resp.json():
             url = peer["url"] if isinstance(peer, dict) else peer
             ver = peer.get("version", "1") if isinstance(peer, dict) else "1"
             register(url, ver)
             if url not in (SELF_URL, seed_url):
                 try:
-                    await client.post(f"{url}/peers/register", json=payload)
+                    await client.post(f"{url}/api/peers/register", json=payload)
                 except Exception:
                     pass
     except Exception:
