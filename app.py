@@ -82,6 +82,7 @@ app.add_middleware(
 browser = None
 
 @app.get("/status")
+@app.get("/api/status")
 async def status():
     now = time.time()
     return {

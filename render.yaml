@@ -9,7 +9,7 @@ services:
     region: frankfurt
     envVars:
       - key: BOOTSTRAP_PEERS
-        value: "https://idos.numerlab.org"
+        value: "https://p2p-idos.numerlab.org"
       - key: PEERS_CACHE
         value: /app/peers_cache.json
       - key: PEER_REDISCOVER
