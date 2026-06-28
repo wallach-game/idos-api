@@ -61,13 +61,16 @@ async def search_connections(request: Request, from_stop: str, to_stop: str, dat
         fwd_headers = {"x-hops": str(hops + 1)}
         if cf := request.headers.get("CF-Connecting-IP"):
             fwd_headers["CF-Connecting-IP"] = cf
-        async with httpx.AsyncClient(timeout=65) as client:
-            resp = await client.get(
-                f"{peer}/api/search",
-                params=request.query_params,
-                headers=fwd_headers,
-            )
-        return Response(content=resp.content, media_type="application/json", status_code=resp.status_code)
+        try:
+            async with httpx.AsyncClient(timeout=65) as client:
+                resp = await client.get(
+                    f"{peer}/api/search",
+                    params=request.query_params,
+                    headers=fwd_headers,
+                )
+            return Response(content=resp.content, media_type="application/json", status_code=resp.status_code)
+        except Exception:
+            pass  # peer unreachable, fall through to handle locally
 
     if date and not DATE_RE.match(date):
         raise HTTPException(status_code=422, detail="Invalid date format, expected DD.MM.YYYY")
