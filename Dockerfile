@@ -1,45 +1,21 @@
-# Base image
-FROM python:3.12-slim
+FROM python:3.12-slim-bookworm
 
-# Environment variables for noVNC
-ENV NOVNC_HOME=/opt/novnc
-ENV WEB_PORT=6080
-
-# Install dependencies
 RUN apt-get update && apt-get install -y \
-    wget \
-    git \
     curl \
-    x11vnc \
-    xvfb \
-    fluxbox \
-    net-tools \
-    procps \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Playwright and FastAPI dependencies
-RUN pip install --no-cache-dir fastapi uvicorn[standard] playwright
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir fastapi==0.115.0 uvicorn[standard]==0.30.0 playwright==1.44.0 httpx==0.27.0
 
-# Install browsers for Playwright
-RUN playwright install
+ENV PLAYWRIGHT_BROWSERS_PATH=/opt/ms-playwright
+RUN playwright install && playwright install-deps
 
-# Install noVNC
-RUN git clone https://github.com/novnc/noVNC.git /opt/novnc
-RUN git clone https://github.com/novnc/websockify.git /opt/novnc/utils/websockify
-
-RUN playwright install-deps
-
-# Copy app
+RUN useradd -m appuser
+RUN chown -R appuser:appuser /opt/ms-playwright
+USER appuser
 WORKDIR /app
-COPY ./app.py .
+COPY ./routes.py ./peers.py ./proxies.py ./
 
-# Expose ports
-EXPOSE 8000 5900 6080
+EXPOSE 8000
 
-# Start Xvfb, x11vnc, noVNC and FastAPI
-CMD bash -c "\
-    Xvfb :0 -screen 0 1280x720x24 & \
-    fluxbox & \
-    x11vnc -display :0 -nopw -forever -shared & \
-    /opt/novnc/utils/novnc_proxy --vnc localhost:5900 --listen $WEB_PORT & \
-    xvfb-run -a uvicorn app:app --host 0.0.0.0 --port 8000"
+CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
