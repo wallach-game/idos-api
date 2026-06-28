@@ -128,10 +128,28 @@ async def _do_bootstrap() -> None:
         await asyncio.gather(*[_connect_to(client, s) for s in seeds], return_exceptions=True)
 
 
+async def _prune_dead() -> None:
+    """Remove peers that don't respond to /api/status."""
+    candidates = [u for u in _peer_list if u != SELF_URL]
+    if not candidates:
+        return
+    async with httpx.AsyncClient(timeout=5) as client:
+        results = await asyncio.gather(
+            *[client.get(f"{u}/api/status") for u in candidates],
+            return_exceptions=True,
+        )
+    for url, result in zip(candidates, results):
+        if isinstance(result, Exception) or result.status_code != 200:
+            _peer_list.remove(url)
+            _peers.pop(url, None)
+    _save()
+
+
 async def bootstrap() -> None:
-    """Load cache, connect to all seeds, then keep rediscovering periodically."""
+    """Load cache, connect to all seeds, prune dead peers, then keep rediscovering."""
     _load()
     await _do_bootstrap()
+    await _prune_dead()
     asyncio.create_task(_rediscover_loop())
 
 
@@ -139,6 +157,7 @@ async def _rediscover_loop() -> None:
     while True:
         await asyncio.sleep(_REDISCOVER_INTERVAL)
         await _do_bootstrap()
+        await _prune_dead()
 
 
 # ── FastAPI router ─────────────────────────────────────────────────────────────
