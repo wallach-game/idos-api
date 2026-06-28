@@ -4,7 +4,6 @@ services:
     env: docker
     dockerfilePath: ./Dockerfile
     dockerContext: .
-    port: 8000
     healthCheckPath: /status
     plan: free
     region: frankfurt
