@@ -1,7 +1,7 @@
 > [!WARNING]
 > As out server location currently faces extreme weather all operations are suspended for at least 6hours. 18:00-00:00
 > 
-> 17:43, Numerator
+> 17:43 07 01 2016, Numerator
 
 # IDOS API
 
