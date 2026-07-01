@@ -1,3 +1,7 @@
+> [!WARNING]
+> As out server location currently faces extreme weather all operations are suspended for at least 6hours. 18:00-00:00
+> 17:43, Numerator
+
 # IDOS API
 
 REST API for Czech public transport connections, powered by [idos.cz](https://idos.cz). Built with FastAPI + Playwright.
